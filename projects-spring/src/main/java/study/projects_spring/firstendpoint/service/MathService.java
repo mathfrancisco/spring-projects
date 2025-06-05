@@ -2,7 +2,7 @@ package study.projects_spring.firstendpoint.service;
 
 import org.springframework.stereotype.Service;
 import study.projects_spring.firstendpoint.exception.UnsurpportedMathOperationException;
-import study.projects_spring.firstendpoint.util.NumberParser; // Importe a classe auxiliar
+import study.projects_spring.firstendpoint.util.NumberParser;
 
 @Service
 public class MathService {
