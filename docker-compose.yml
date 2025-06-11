@@ -1,0 +1,40 @@
+# Define a versão do Docker Compose. A versão 3.8 é moderna e amplamente compatível.
+version: '3.8'
+
+# Define os serviços (contêineres) que farão parte da nossa aplicação.
+services:
+  # O nome do nosso serviço de banco de dados. Usaremos 'db' para nos referirmos a ele.
+  db:
+    # A imagem Docker que será usada. 'mysql:8.0' é uma versão específica e estável.
+    # É uma boa prática evitar a tag 'latest' para garantir a reprodutibilidade.
+    image: mysql:8.0
+
+    # Define um nome específico para o contêiner, facilitando a sua identificação.
+    container_name: mysql-firstendpoint
+
+    # Reinicia o contêiner automaticamente, a menos que ele tenha sido parado manualmente.
+    # Útil para garantir que o banco de dados esteja sempre disponível durante o desenvolvimento.
+    restart: unless-stopped
+
+    # Variáveis de ambiente para configurar o MySQL na inicialização.
+    # IMPORTANTE: Altere as senhas para um ambiente de produção!
+    environment:
+      MYSQL_ROOT_PASSWORD: 'rootpassword' # Senha para o usuário root do MySQL.
+      MYSQL_DATABASE: 'first_endpoint_db' # Cria um banco de dados com este nome.
+      MYSQL_USER: 'springuser'            # Cria um usuário específico para a aplicação.
+      MYSQL_PASSWORD: 'springuserpass'    # Define a senha para o usuário da aplicação.
+
+    # Mapeia a porta 3306 do contêiner para a porta 3306 da sua máquina local (host).
+    # Isso permite que sua aplicação Spring (rodando no host) se conecte ao banco no contêiner.
+    ports:
+      - "3306:3306"
+
+    # Cria e gerencia um volume para persistir os dados do banco de dados.
+    # Sem isso, todos os dados seriam perdidos sempre que o contêiner fosse removido.
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+# Define os volumes nomeados que serão gerenciados pelo Docker.
+volumes:
+  mysql-data:
+  # Deixar em branco usa a configuração padrão do driver de volume do Docker.

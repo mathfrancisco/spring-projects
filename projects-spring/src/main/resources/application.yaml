@@ -1,1 +1,24 @@
-spring.application.name=projects-spring
+spring:
+  application:
+    name: projects-spring
+
+  # Configurações da fonte de dados (DataSource)
+  datasource:
+    # URL de conexão JDBC com o banco de dados MySQL rodando no Docker.
+    url: jdbc:mysql://localhost:3306/first_endpoint_db?useSSL=false&serverTimezone=UTC
+    # Credenciais do usuário que definimos no arquivo docker-compose.yml.
+    username: springuser
+    password: springuserpass
+    # Classe do Driver JDBC para o MySQL.
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # Configurações do JPA (Java Persistence API) e do Hibernate
+  jpa:
+    hibernate:
+      # Estratégia de geração do schema do banco. 'update' modifica o banco
+      # para corresponder às suas entidades (@Entity) ao iniciar a aplicação.
+      ddl-auto: update
+
+    # Mostra no console as queries SQL que o Hibernate está executando.
+    # Muito útil para depuração.
+    show-sql: true
