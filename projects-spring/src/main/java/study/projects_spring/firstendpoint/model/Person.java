@@ -1,5 +1,6 @@
 package study.projects_spring.firstendpoint.model;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +15,8 @@ import java.util.Objects;
  */
 @Getter
 @Setter
+@Entity
+@Table(name = "person")
 public class Person implements Serializable {
 
     // Identificador de versão para a serialização. Ajuda a controlar versões da classe.
@@ -21,10 +24,16 @@ public class Person implements Serializable {
     private static final long serialVersionUID = 1L;
 
     // Atributos que representam os dados de uma pessoa.
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name="first_name",nullable = false,length = 80)
     private String firstName;
+    @Column(name="last_name",nullable = false,length = 80)
     private String lastName;
+    @Column(nullable = false,length = 100)
     private String address;
+    @Column(nullable = false,length = 6)
     private String gender;
 
     // Construtor vazio. É necessário para que frameworks como o Jackson (que converte JSON para Objeto)
