@@ -1,14 +1,14 @@
 package study.projects_spring.firstendpoint.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import study.projects_spring.firstendpoint.exception.ResourceNotFoundException;
 import study.projects_spring.firstendpoint.model.Person;
 import study.projects_spring.firstendpoint.repository.PersonRepository;
-
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.logging.Logger;
 
 @Service
 public class PersonService {
@@ -21,7 +21,7 @@ public class PersonService {
 
     // Objeto Logger para registrar informações sobre a execução dos métodos.
     // É uma prática recomendada para depuração e monitoramento.
-    private final Logger logger = Logger.getLogger(PersonService.class.getName());
+    private final Logger logger = LoggerFactory.getLogger(PersonService.class.getName());
 
     /**
      * Busca uma pessoa.

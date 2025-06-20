@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import study.projects_spring.firstendpoint.model.Person;
 import study.projects_spring.firstendpoint.service.PersonService;
 import java.util.List;
-
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * @RestController: Anotação que combina @Controller e @ResponseBody.
  * Ela informa ao Spring que esta classe é um controlador REST,
@@ -29,7 +31,7 @@ public class PersonController {
     @Autowired
     private PersonService service;
 
-
+    private final Logger logger = LoggerFactory.getLogger(PersonController.class.getName());
 
     /**
      * Endpoint para buscar uma pessoa pelo ID.
@@ -40,6 +42,8 @@ public class PersonController {
      */
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Person findById(@PathVariable("id") Long id) {
+        logger.info("Finding one person!");
+
         return service.findById(id);
     }
 
@@ -53,6 +57,8 @@ public class PersonController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public Person create(@RequestBody Person person) {
+        logger.info("Creating one person!");
+
         return service.create(person);
     }
 
@@ -65,6 +71,8 @@ public class PersonController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public Person update(@RequestBody Person person) {
+        logger.info("Updating one person!");
+
         return service.update(person);
     }
 
@@ -75,6 +83,8 @@ public class PersonController {
      */
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Person> findAll() {
+        logger.info("Finding all person!");
+
         return service.findAll();
     }
 
@@ -87,6 +97,8 @@ public class PersonController {
      */
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+        logger.info("Deleting one person!");
+
         service.delete(id);
         // Retorna um status HTTP 204 No Content, que é o padrão para delete bem-sucedido.
         return ResponseEntity.noContent().build();

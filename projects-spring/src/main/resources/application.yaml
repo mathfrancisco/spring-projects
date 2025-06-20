@@ -24,3 +24,9 @@ spring:
     # Mostra no console as queries SQL que o Hibernate está executando.
     # Muito útil para depuração.
     show-sql: true
+    open-in-view: false
+logging:
+  level:
+     root: INFO
+    # study.projects_spring: DEBUG
+
