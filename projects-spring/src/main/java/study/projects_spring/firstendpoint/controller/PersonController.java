@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import study.projects_spring.firstendpoint.model.Person;
+import study.projects_spring.firstendpoint.model.dto.v1.PersonDto;
+import study.projects_spring.firstendpoint.model.dto.v2.PersonDtoV2;
 import study.projects_spring.firstendpoint.service.PersonService;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 /**
@@ -41,7 +41,7 @@ public class PersonController {
      * - @PathVariable("id") String id: Pega o valor do "{id}" da URL e o atribui à variável 'id'.
      */
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Person findById(@PathVariable("id") Long id) {
+    public PersonDto findById(@PathVariable("id") Long id) {
         logger.info("Finding one person!");
 
         return service.findById(id);
@@ -56,11 +56,19 @@ public class PersonController {
     @PostMapping(
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Person create(@RequestBody Person person) {
+    public PersonDto create(@RequestBody PersonDto person) {
         logger.info("Creating one person!");
 
         return service.create(person);
     }
+//@PostMapping(name = "/v2",
+//            produces = MediaType.APPLICATION_JSON_VALUE,
+//            consumes = MediaType.APPLICATION_JSON_VALUE)
+//    public PersonDtoV2 create(@RequestBody PersonDtoV2 person) {
+//        logger.info("Creating one person!");
+//
+//        return service.createV2(person);
+//    }
 
     /**
      * Endpoint para atualizar os dados de uma pessoa.
@@ -70,7 +78,7 @@ public class PersonController {
     @PutMapping(
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Person update(@RequestBody Person person) {
+    public PersonDto update(@RequestBody PersonDto person) {
         logger.info("Updating one person!");
 
         return service.update(person);
@@ -82,7 +90,7 @@ public class PersonController {
      * - URL: /person/findAll
      */
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Person> findAll() {
+    public List<PersonDto> findAll() {
         logger.info("Finding all person!");
 
         return service.findAll();

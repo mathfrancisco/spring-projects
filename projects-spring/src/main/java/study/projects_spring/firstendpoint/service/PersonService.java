@@ -5,10 +5,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import study.projects_spring.firstendpoint.exception.ResourceNotFoundException;
+import study.projects_spring.firstendpoint.mapper.custom.PersonMapper;
 import study.projects_spring.firstendpoint.model.Person;
+import study.projects_spring.firstendpoint.model.dto.v1.PersonDto;
 import study.projects_spring.firstendpoint.repository.PersonRepository;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+
+import static study.projects_spring.firstendpoint.mapper.DozerMapper.parseListObjects;
+import static study.projects_spring.firstendpoint.mapper.DozerMapper.parseObject;
 
 @Service
 public class PersonService {
@@ -16,95 +20,50 @@ public class PersonService {
     @Autowired
     PersonRepository personRepository;
 
-    // Contador atômico para gerar IDs únicos de forma segura.
-    private final AtomicLong counter = new AtomicLong();
+//    @Autowired
+//    PersonMapper personMapper;
 
-    // Objeto Logger para registrar informações sobre a execução dos métodos.
-    // É uma prática recomendada para depuração e monitoramento.
     private final Logger logger = LoggerFactory.getLogger(PersonService.class.getName());
 
-    /**
-     * Busca uma pessoa.
-     * ATENÇÃO: Esta é uma implementação "mocada" (simulada).
-     * Em uma aplicação real, este método buscaria os dados de um banco de dados usando o 'id'.
-     * @param id O ID da pessoa a ser buscada (atualmente não utilizado na lógica).
-     * @return Um objeto Person com dados fixos.
-     */
-    public Person findById(Long id){
-        logger.info("Finding one Person!"); // Registra uma mensagem de log.
-        return personRepository.findById(id)
+    public PersonDto findById(Long id){
+        logger.info("Finding one Person!");
+        var entity = personRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("No records found for this id"));
+        return parseObject(entity, PersonDto.class);
     }
 
-    /**
-     * Lista todas as pessoas.
-     * ATENÇÃO: Implementação "mocada". Cria uma lista de pessoas dinamicamente.
-     * Em um cenário real, buscaria todos os registros de pessoa do banco de dados.
-     * @return Uma lista de objetos Person.
-     */
-    public List<Person> findAll(){
-        logger.info("Finding all Person!");
-
-        return personRepository.findAll();
+    public List<PersonDto> findAll(){
+        logger.info("Finding all People!");
+        return parseListObjects(personRepository.findAll(), PersonDto.class);
     }
 
-    /**
-     * Método auxiliar privado para criar um objeto Person simulado.
-     * @param i Um número para diferenciar os dados de cada pessoa.
-     * @return Um novo objeto Person.
-     */
-//    private Person mockPerson(int i) {
-//        Person person = new Person();
-//        person.setId(counter.incrementAndGet());
-//        person.setFirstName("Firstname " + i);
-//        person.setLastName("LastName " + i);
-//        person.setAddress("Some address in Brazil " + i);
-//        person.setGender("Male");
-//        return person;
+    public PersonDto create(PersonDto personDto){
+        logger.info("Creating one person!");
+        var entity = parseObject(personDto, Person.class);
+        return parseObject(personRepository.save(entity), PersonDto.class);
+    }
+//    public PersonDtoV2 createV2(PersonDtoV2 person){
+//        logger.info("Creating one person!");
+//        var entity = personMapper.convertDtoToEntity(person);
+//        return personMapper.convertEntiToDto(personRepository.save(entity));
 //    }
 
-    /**
-     * Cria uma nova pessoa.
-     * ATENÇÃO: Versão "mocada". Apenas retorna o objeto recebido.
-     * Em uma aplicação real, este método salvaria o objeto 'person' no banco de dados.
-     * @param person O objeto Person a ser criado.
-     * @return O objeto Person que foi "salvo".
-     */
-    public Person create(Person person){
-        logger.info("Creating a new Person!");
-         person.setId(null);
-        return personRepository.save(person);
-    }
-
-    /**
-     * Atualiza uma pessoa existente.
-     * ATENÇÃO: Versão "mocada". Apenas retorna o objeto recebido.
-     * Em uma aplicação real, buscaria a pessoa pelo ID e atualizaria seus dados no banco.
-     * @param person O objeto Person com os dados atualizados.
-     * @return O objeto Person atualizado.
-     */
-    public Person update(Person person){
+    public PersonDto update(PersonDto personDto){
         logger.info("Updating a Person!");
 
-        Person entity= personRepository.findById(person.getId())
+        Person entity = personRepository.findById(personDto.getId())
                 .orElseThrow(()-> new ResourceNotFoundException("No records found for this id"));
-        entity.setFirstName(person.getFirstName());
-        entity.setLastName(person.getLastName());
-        entity.setAddress(person.getAddress());
-        entity.setGender(person.getGender());
 
-        return personRepository.save(entity);
+        entity.setFirstName(personDto.getFirstName());
+        entity.setLastName(personDto.getLastName());
+        entity.setAddress(personDto.getAddress());
+        entity.setGender(personDto.getGender());
+
+        return parseObject(personRepository.save(entity), PersonDto.class);
     }
 
-    /**
-     * Deleta uma pessoa.
-     * ATENÇÃO: Versão "mocada". Não executa nenhuma lógica de exclusão.
-     * Em uma aplicação real, removeria o registro correspondente ao 'id' do banco de dados.
-     * @param id O ID da pessoa a ser deletada.
-     */
     public void delete(Long id){
         logger.info("Deleting one Person!");
-
         Person entity = personRepository.findById(id)
                 .orElseThrow(()-> new ResourceNotFoundException("No records found for this id"));
         personRepository.delete(entity);

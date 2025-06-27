@@ -19,7 +19,8 @@ spring:
     hibernate:
       # Estratégia de geração do schema do banco. 'update' modifica o banco
       # para corresponder às suas entidades (@Entity) ao iniciar a aplicação.
-      ddl-auto: update
+      ddl-auto: none
+
 
     # Mostra no console as queries SQL que o Hibernate está executando.
     # Muito útil para depuração.
